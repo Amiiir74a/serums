@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>محاسبه دهیدراسیون</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f3f3f3;
+      direction: rtl;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button {
+      flex: 1;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    button:hover:enabled {
+      background-color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+
+  
+  <h2>محاسبه دهیدراسیون</h2>
+
+  <label for="age">سن (سال):</label>
+  <input type="number" id="age" placeholder="مثلاً ۵">
+
+  <label for="weight">وزن (کیلوگرم):</label>
+  <input type="number" id="weight" placeholder="مثلاً ۲۰">
+
+  <label for="type">نوع دهیدراسیون:</label>
+  <select id="type" onchange="updateORSStatus()">
+    <option>اسهال</option>
+    <option>استفراغ</option>
+    <option>اسهال و استفراغ</option>
+    <option>سوختگی</option>
+    <option>فضای سوم</option>
+    <option>خونریزی</option>
+  </select>
+
+  <label for="level">شدت دهیدراسیون:</label>
+  <select id="level" onchange="updateORSStatus()">
+    <option>خفیف</option>
+    <option>متوسط</option>
+    <option>شدید</option>
+  </select>
+
+  <div class="button-group">
+    <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
+    <button onclick="goToPage('INJ.html')">سرم تزریقی</button>
+  </div>
+
+  <script>
+    function updateORSStatus() {
+      const type = document.getElementById('type').value;
+      const level = document.getElementById('level').value;
+      const orsBtn = document.getElementById('orsBtn');
+
+      // ORS فقط برای دهیدراسیون خفیف و متوسط + سه مورد اول مجاز است
+      const orsAllowedTypes = ["اسهال", "استفراغ", "اسهال و استفراغ"];
+      const orsAllowedLevels = ["خفیف", "متوسط"];
+
+      if (orsAllowedTypes.includes(type) && orsAllowedLevels.includes(level)) {
+        orsBtn.disabled = false;
+      } else {
+        orsBtn.disabled = true;
+      }
+    }
+
+    function goToPage(page) {
+      const age = document.getElementById('age').value;
+      const weight = document.getElementById('weight').value;
+      const type = document.getElementById('type').value;
+      const level = document.getElementById('level').value;
+
+      // ذخیره اطلاعات در localStorage
+      localStorage.setItem('age', age);
+      localStorage.setItem('weight', weight);
+      localStorage.setItem('type', type);
+      localStorage.setItem('level', level);
+
+      // رفتن به صفحه مورد نظر
+      window.location.href = page;
+    }
+  </script>
+
+</body>
+</html>

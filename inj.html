@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محاسبه سرم تزریقی</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="card" id="hydrationCard">
+    <div class="section-header blue">هیدراسیون اولیه</div>
+    <div id="hydrationContent">در حال بارگذاری...</div>
+    <div class="summary blue" id="totalVolume">مجموع سرم دریافتی: ۰ سی‌سی</div>
+  </div>
+
+  <div class="card" id="maintenanceCard">
+    <div class="section-header green">Maintenance</div>
+    <div id="maintenanceContent">در حال بارگذاری...</div>
+  </div>
+
+  <script>
+    const age = parseInt(localStorage.getItem('age'));
+    const weight = parseFloat(localStorage.getItem('weight'));
+    const type = localStorage.getItem('type'); // مثل اسهال یا خونریزی
+    const severity = localStorage.getItem('severity'); // خفیف، متوسط، شدید
+
+    const isAdult = age > 16 || weight > 60;
+    let hydrationHTML = "";
+    let total = 0;
+
+    // محاسبات اطفال
+    if (!isAdult) {
+      const first_volume = weight * 20;
+      const fourth_volume = weight * 10;
+      const first_type = ['اسهال','استفراغ','اسهال و استفراغ'].includes(type) ? 'نرمال سالین' : 'رینگر لاکتات یا رینگر';
+      const fourth_type = ['اسهال','استفراغ','اسهال و استفراغ'].includes(type) ? 'FFP' : 'FFP + PC';
+
+      hydrationHTML = `
+        <label><input type="checkbox" onchange="calcTotal()"> ابتدا ${first_volume} سی‌سی ${first_type} طی ۲۰ دقیقه تزریق شود</label><br/>
+        <label><input type="checkbox" onchange="calcTotal()"> نوبت دوم ${first_volume} طی ۲ ساعت تزریق شود</label><br/>
+        <label><input type="checkbox" onchange="calcTotal()"> نوبت سوم ${first_volume} سی‌سی تزریق شود</label><br/>
+        <label><input type="checkbox" onchange="calcTotal()"> نوبت چهارم ${fourth_volume} سی‌سی ${fourth_type} تزریق شود</label>
+      `;
+
+      document.getElementById('hydrationContent').innerHTML = hydrationHTML;
+    } else {
+      const first_volume = 2000;
+      const third_volume = 2;
+      const third_type = 'PC';
+
+      hydrationHTML = `
+        <label><input type="checkbox" onchange="calcTotal()"> ابتدا ${first_volume} سی‌سی نرمال سالین طی ۲۰ دقیقه تزریق شود</label><br/>
+        <label><input type="checkbox" onchange="calcTotal()"> نوبت دوم ${first_volume} سی‌سی طی ۲۰ دقیقه تزریق شود</label><br/>
+        <label><input type="checkbox" onchange="calcTotal()"> نوبت سوم ${third_volume} واحد ${third_type} تزریق شود</label>
+      `;
+
+      document.getElementById('hydrationContent').innerHTML = hydrationHTML;
+    }
+
+    function calcTotal() {
+      const checkboxes = document.querySelectorAll('#hydrationContent input[type="checkbox"]');
+      let totalVolume = 0;
+
+      checkboxes.forEach((cb, idx) => {
+        if (cb.checked) {
+          if (!isAdult) {
+            if (idx < 3) totalVolume += weight * 20;
+            else totalVolume += weight * 10;
+          } else {
+            if (idx < 2) totalVolume += 2000;
+            else totalVolume += 0; // حجم واحد PC رو حساب نکردیم
+          }
+        }
+      });
+
+      document.getElementById('totalVolume').innerText = `مجموع سرم دریافتی: ${totalVolume} سی‌سی`;
+    }
+
+    // بارگذاری بخش Maintenance
+    const isKid = !isAdult;
+    if (!isKid) {
+      let adult_volume = 2.4;
+      if (age > 65) adult_volume = 1.7;
+      else if (age >= 55) adult_volume = 2.1;
+
+      document.getElementById('maintenanceContent').innerHTML = `
+        <p>در بزرگسالان با توجه به وضعیت بیمار و سابقه بیماری زمینه‌ای و نوع بیماری تصمیم‌گیری می‌شود اما بطور معمول در این بیمار در ۲۴ ساعت <strong>${adult_volume}</strong> لیتر سرم داده می‌شود.</p>
+        <p>در افراد با نارسایی کلیوی باید هر ۳ ساعت حجم ادرار چک شود و به اندازه آن به اضافه ۲۵۰ سی‌سی در سه ساعت بعدی حجم داده شود.</p>
+      `;
+    } else {
+      let child_vol = 0;
+      if (weight <= 10) child_vol = weight * 100;
+      else if (weight <= 20) child_vol = ((weight - 10) * 50) + 1000;
+      else child_vol = ((weight - 20) * 20) + 1500;
+      if (child_vol > 2400) child_vol = 2400;
+
+      const kcl_vol = Math.round(child_vol / 100);
+
+      document.getElementById('maintenanceContent').innerHTML = `
+        <label>نوع سرم سدیم:
+          <select id="naclSelector" onchange="updateChildSection(this.value)">
+            <option value="NaCl 5%">NaCl 5%</option>
+            <option value="NaCl 20%">NaCl 20%</option>
+            <option value="Serum D/S">Serum D/S</option>
+          </select>
+        </label>
+        <div id="childDetails"></div>
+        <script>updateChildSection("NaCl 5%")</script>
+      `;
+
+      window.updateChildSection = function(selected) {
+        let nacl_vol = 0;
+        let child_type = "D/W 5%";
+        if (selected === "NaCl 5%") nacl_vol = kcl_vol * 16;
+        else if (selected === "NaCl 20%") nacl_vol = kcl_vol * 5;
+        else { nacl_vol = 0; child_type = "D/S"; }
+
+        if (selected !== "Serum D/S") child_type = "D/W 5%";
+
+        document.getElementById("childDetails").innerHTML = `
+          <p>در این بیمار می‌توان در ۲۴ ساعت:</p>
+          <ul>
+            <li><strong>${child_vol}</strong> سی‌سی ${child_type}</li>
+            <li>+ <strong>${nacl_vol}</strong> سی‌سی ${selected}</li>
+            <li>+ <strong>${kcl_vol}</strong> سی‌سی KCL 5%</li>
+          </ul>
+        `;
+      }
+
+      updateChildSection("NaCl 5%");
+    }
+  </script>
+</body>
+</html>

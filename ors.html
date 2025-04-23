@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دستور مصرف ORS</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f3f3f3;
+      direction: rtl;
+      line-height: 2;
+    }
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    strong {
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="textOutput">
+    در حال بارگذاری...
+  </div>
+
+  <script>
+    const weight = parseFloat(localStorage.getItem('weight'));
+    const level = localStorage.getItem('level');
+
+    let d_ors = 0;
+    if (level === "خفیف") {
+      d_ors = 50 * weight;
+    } else if (level === "متوسط") {
+      d_ors = 100 * weight;
+    }
+
+    const m_ors = 5 * weight;
+    const o_ors = 10 * weight;
+    const R_ors = (((d_ors ) + (m_ors * 20)) / 1000).toFixed(1);
+
+    const text = `
+      یک پاکت در یک لیتر آب جوشیده سرد شده حل شود و در طبقه پایین یخچال گذاشته شود. محلول باید به آرامی داده شود و در صورت استفراغ بعد از ده دقیقه مجددا داده شود.
+      <br><br>
+      ابتدا <strong>${d_ors}</strong> سی‌سی جهت جبران کم‌آبی در ۴ ساعت اول داده شود.<br>
+      در این چهار ساعت شیر مادر و آب جوشیده و چای کمرنگ در کنار محلول مشکلی ندارد. ولی شیر خشک یا بقیه غذاها بهتر است داده نشوند تا زمانیکه حالت تهوع و استفراغ برطرف شود.
+      <br><br>
+      سپس نگهدارنده با مقدار <strong>${m_ors}</strong> سی‌سی در هر ساعت تا زمان پایان اسهال ادامه یابد.
+      <br><br>
+      همچنین بعد از هر بار اسهال، <strong>${o_ors}</strong> سی‌سی ORS طی یک ساعت داده شود.
+      <br><br>
+      در مجموع حداقل <strong>${R_ors}</strong> پاکت برای روز اول لازم است.
+      <br><br>
+      میوه و آبمیوه و شیر و چای و قهوه و مواد شیرین و قندی و چیپس و پنیر اسهال را تشدید می‌کند و نباید داده شوند.
+    `;
+
+    document.getElementById("textOutput").innerHTML = text;
+  </script>
+
+</body>
+</html>
