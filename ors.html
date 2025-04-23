@@ -32,33 +32,38 @@
     const weight = parseFloat(localStorage.getItem('weight'));
     const level = localStorage.getItem('level');
 
-    let d_ors = 0;
-    if (level === "خفیف") {
-      d_ors = 50 * weight;
-    } else if (level === "متوسط") {
-      d_ors = 100 * weight;
+    if (!weight || !level) {
+      document.getElementById("textOutput").innerHTML = "اطلاعات کافی برای محاسبه ORS وجود ندارد.";
+    } else {
+      // محاسبات ORS
+      let d_ors = 0;
+      if (level === "خفیف") {
+        d_ors = 50 * weight;
+      } else if (level === "متوسط") {
+        d_ors = 100 * weight;
+      }
+
+      const m_ors = 5 * weight;
+      const o_ors = 10 * weight;
+      const R_ors = (((d_ors * 4) + (m_ors * 20)) / 1000).toFixed(1);
+
+      const text = `
+        یک پاکت در یک لیتر آب جوشیده سرد شده حل شود و در طبقه پایین یخچال گذاشته شود. محلول باید به آرامی داده شود و در صورت استفراغ بعد از ده دقیقه مجددا داده شود.
+        <br><br>
+        ابتدا <strong>${d_ors}</strong> سی‌سی جهت جبران کم‌آبی در ۴ ساعت اول داده شود.<br>
+        در این چهار ساعت شیر مادر و آب جوشیده و چای کمرنگ در کنار محلول مشکلی ندارد. ولی شیر خشک یا بقیه غذاها بهتر است داده نشوند تا زمانیکه حالت تهوع و استفراغ برطرف شود.
+        <br><br>
+        سپس نگهدارنده با مقدار <strong>${m_ors}</strong> سی‌سی در هر ساعت تا زمان پایان اسهال ادامه یابد.
+        <br><br>
+        همچنین بعد از هر بار اسهال، <strong>${o_ors}</strong> سی‌سی ORS طی یک ساعت داده شود.
+        <br><br>
+        در مجموع حداقل <strong>${R_ors}</strong> پاکت برای روز اول لازم است.
+        <br><br>
+        میوه و آبمیوه و شیر و چای و قهوه و مواد شیرین و قندی و چیپس و پنیر اسهال را تشدید می‌کند و نباید داده شوند.
+      `;
+
+      document.getElementById("textOutput").innerHTML = text;
     }
-
-    const m_ors = 5 * weight;
-    const o_ors = 10 * weight;
-    const R_ors = (((d_ors ) + (m_ors * 20)) / 1000).toFixed(1);
-
-    const text = `
-      یک پاکت در یک لیتر آب جوشیده سرد شده حل شود و در طبقه پایین یخچال گذاشته شود. محلول باید به آرامی داده شود و در صورت استفراغ بعد از ده دقیقه مجددا داده شود.
-      <br><br>
-      ابتدا <strong>${d_ors}</strong> سی‌سی جهت جبران کم‌آبی در ۴ ساعت اول داده شود.<br>
-      در این چهار ساعت شیر مادر و آب جوشیده و چای کمرنگ در کنار محلول مشکلی ندارد. ولی شیر خشک یا بقیه غذاها بهتر است داده نشوند تا زمانیکه حالت تهوع و استفراغ برطرف شود.
-      <br><br>
-      سپس نگهدارنده با مقدار <strong>${m_ors}</strong> سی‌سی در هر ساعت تا زمان پایان اسهال ادامه یابد.
-      <br><br>
-      همچنین بعد از هر بار اسهال، <strong>${o_ors}</strong> سی‌سی ORS طی یک ساعت داده شود.
-      <br><br>
-      در مجموع حداقل <strong>${R_ors}</strong> پاکت برای روز اول لازم است.
-      <br><br>
-      میوه و آبمیوه و شیر و چای و قهوه و مواد شیرین و قندی و چیپس و پنیر اسهال را تشدید می‌کند و نباید داده شوند.
-    `;
-
-    document.getElementById("textOutput").innerHTML = text;
   </script>
 
 </body>

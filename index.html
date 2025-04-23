@@ -44,7 +44,6 @@
 </head>
 <body>
 
-  
   <h2>محاسبه دهیدراسیون</h2>
 
   <label for="age">سن (سال):</label>
@@ -95,16 +94,14 @@
     function goToPage(page) {
       const age = document.getElementById('age').value;
       const weight = document.getElementById('weight').value;
-      const type = document.getElementById('type').value;
-      const level = document.getElementById('level').value;
 
-      // ذخیره اطلاعات در localStorage
+      if (!age || !weight) {
+        alert("لطفاً سن و وزن را وارد کنید.");
+        return;
+      }
+
       localStorage.setItem('age', age);
       localStorage.setItem('weight', weight);
-      localStorage.setItem('type', type);
-      localStorage.setItem('level', level);
-
-      // رفتن به صفحه مورد نظر
       window.location.href = page;
     }
   </script>

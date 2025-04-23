@@ -1,7 +1,12 @@
 // گرفتن داده‌ها از localStorage (ارسال‌شده از صفحه اول)
-const weight = parseFloat(localStorage.getItem('weight'));
-const age = parseInt(localStorage.getItem('age'));
-const dehydration = localStorage.getItem('dehydration'); // اسهال، سوختگی و غیره
+const weight = parseFloat(localStorage.getItem('weight')) || 0;
+const age = parseInt(localStorage.getItem('age')) || 0;
+const dehydration = localStorage.getItem('dehydration') || "نامشخص";
+
+if (!weight || !age) {
+    alert("لطفاً اطلاعات وزن و سن را وارد کنید.");
+    window.location.href = "index.html";
+}
 
 // تشخیص کودک یا بزرگسال
 const isAdult = age > 16 || weight > 60;
