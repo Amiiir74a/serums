@@ -2,6 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>محاسبه دهیدراسیون</title>
   <style>
     body {
@@ -20,9 +21,11 @@
       padding: 10px;
       margin-top: 5px;
       font-size: 16px;
+      box-sizing: border-box;
     }
     .button-group {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       margin-top: 20px;
     }
@@ -32,6 +35,9 @@
       color: white;
       border: none;
       cursor: pointer;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 5px;
     }
     button:disabled {
       background-color: #ccc;
@@ -39,6 +45,41 @@
     }
     button:hover:enabled {
       background-color: #1976d2;
+    }
+
+    /* Media Query برای گوشی‌های موبایل */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      input, select, button {
+        font-size: 14px;
+        padding: 8px;
+      }
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      input, select, button {
+        font-size: 12px;
+        padding: 6px;
+      }
+      button {
+        font-size: 12px;
+        padding: 8px;
+      }
+      h2 {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
