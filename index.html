@@ -10,25 +10,54 @@
       padding: 20px;
       background-color: #f3f3f3;
       direction: rtl;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
+
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
+      color: #555;
     }
+
     input, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       font-size: 16px;
       box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
+
     .button-group {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 20px;
     }
+
     button {
       flex: 1;
       background-color: #2196f3;
@@ -39,10 +68,12 @@
       font-size: 16px;
       border-radius: 5px;
     }
+
     button:disabled {
       background-color: #ccc;
       cursor: not-allowed;
     }
+
     button:hover:enabled {
       background-color: #1976d2;
     }
@@ -51,6 +82,9 @@
     @media (max-width: 768px) {
       body {
         padding: 10px;
+      }
+      .container {
+        padding: 15px;
       }
       input, select, button {
         font-size: 14px;
@@ -69,6 +103,9 @@
       body {
         padding: 8px;
       }
+      .container {
+        padding: 10px;
+      }
       input, select, button {
         font-size: 12px;
         padding: 6px;
@@ -85,34 +122,36 @@
 </head>
 <body>
 
-  <h2>محاسبه دهیدراسیون</h2>
+  <div class="container">
+    <h2>محاسبه دهیدراسیون</h2>
 
-  <label for="age">سن (سال):</label>
-  <input type="number" id="age" placeholder="مثلاً ۵">
+    <label for="age">سن (سال):</label>
+    <input type="number" id="age" placeholder="مثلاً ۵">
 
-  <label for="weight">وزن (کیلوگرم):</label>
-  <input type="number" id="weight" placeholder="مثلاً ۲۰">
+    <label for="weight">وزن (کیلوگرم):</label>
+    <input type="number" id="weight" placeholder="مثلاً ۲۰">
 
-  <label for="type">نوع دهیدراسیون:</label>
-  <select id="type" onchange="updateORSStatus()">
-    <option>اسهال</option>
-    <option>استفراغ</option>
-    <option>اسهال و استفراغ</option>
-    <option>سوختگی</option>
-    <option>فضای سوم</option>
-    <option>خونریزی</option>
-  </select>
+    <label for="type">نوع دهیدراسیون:</label>
+    <select id="type" onchange="updateORSStatus()">
+      <option>اسهال</option>
+      <option>استفراغ</option>
+      <option>اسهال و استفراغ</option>
+      <option>سوختگی</option>
+      <option>فضای سوم</option>
+      <option>خونریزی</option>
+    </select>
 
-  <label for="level">شدت دهیدراسیون:</label>
-  <select id="level" onchange="updateORSStatus()">
-    <option>خفیف</option>
-    <option>متوسط</option>
-    <option>شدید</option>
-  </select>
+    <label for="level">شدت دهیدراسیون:</label>
+    <select id="level" onchange="updateORSStatus()">
+      <option>خفیف</option>
+      <option>متوسط</option>
+      <option>شدید</option>
+    </select>
 
-  <div class="button-group">
-    <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
-    <button onclick="goToPage('INJ.html')">سرم تزریقی</button>
+    <div class="button-group">
+      <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
+      <button onclick="goToPage('INJ.html')">سرم تزریقی</button>
+    </div>
   </div>
 
   <script>

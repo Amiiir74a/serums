@@ -2,14 +2,29 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>هیدراسیون تزریقی</title>
   <style>
     body {
       font-family: "Tahoma", sans-serif;
       background-color: #f9f9f9;
-      margin: 20px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       direction: rtl;
-      text-align: right;
+    }
+
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
     }
 
     .card {
@@ -62,23 +77,63 @@
     strong {
       color: #d32f2f;
     }
+
+    /* Media Query برای گوشی‌های موبایل */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 15px;
+      }
+      .card {
+        padding: 15px;
+      }
+      .section-header {
+        font-size: 16px;
+      }
+      select {
+        font-size: 13px;
+        padding: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      .container {
+        padding: 10px;
+      }
+      .card {
+        padding: 10px;
+      }
+      .section-header {
+        font-size: 14px;
+      }
+      select {
+        font-size: 12px;
+        padding: 5px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- کارت اول: هیدراسیون اولیه -->
-  <div class="card">
-    <div class="section-header">هیدراسیون اولیه</div>
-    <div id="hydrationContent">در حال بارگذاری...</div>
-    <div class="summary" id="totalVolume">مجموع سرم دریافتی: ۰ سی‌سی</div>
-  </div>
+  <div class="container">
+    <!-- کارت اول: هیدراسیون اولیه -->
+    <div class="card">
+      <div class="section-header">هیدراسیون اولیه</div>
+      <div id="hydrationContent">در حال بارگذاری...</div>
+      <div class="summary" id="totalVolume">مجموع سرم دریافتی: ۰ سی‌سی</div>
+    </div>
 
-  <!-- کارت دوم: Maintenance -->
-  <div class="card maintenance-card">
-    <div class="section-header maintenance-header">Maintenance</div>
-    <div id="maintenanceContent">در حال بارگذاری...</div>
+    <!-- کارت دوم: Maintenance -->
+    <div class="card maintenance-card">
+      <div class="section-header maintenance-header">Maintenance</div>
+      <div id="maintenanceContent">در حال بارگذاری...</div>
+    </div>
   </div>
-
 
   <script>
     // بررسی مقادیر localStorage
