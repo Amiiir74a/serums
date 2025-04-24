@@ -226,15 +226,59 @@
     function goToPage(page) {
       const age = document.getElementById('age').value;
       const weight = document.getElementById('weight').value;
-      const dehydration_percent = localStorage.getItem('dehydration_percent');
+      const type = document.getElementById('type').value;
+      const level = document.getElementById('level').value;
+      const burnPercent = document.getElementById('burn-percent').value;
 
-      if (!age || !weight || !dehydration_percent) {
-        alert("لطفاً سن، وزن و درصد دهیدراسیون را وارد کنید.");
+      // بررسی اینکه سن و وزن وارد شده باشد
+      if (!age || !weight) {
+        alert("لطفاً سن و وزن را وارد کنید.");
         return;
       }
 
+      // اگر نوع دهیدراسیون "سوختگی" باشد، درصد دهیدراسیون باید وارد شود
+      if (type === "سوختگی" && (!burnPercent || burnPercent < 0 || burnPercent > 100)) {
+        alert("لطفاً درصد دهیدراسیون را به درستی وارد کنید (بین 0 تا 100).");
+        return;
+      }
+
+      // اگر نوع دهیدراسیون غیر از "سوختگی" باشد، شدت دهیدراسیون باید انتخاب شده باشد
+      if (type !== "سوختگی" && !level) {
+        alert("لطفاً شدت دهیدراسیون را انتخاب کنید.");
+        return;
+      }
+
+      // ذخیره اطلاعات در localStorage
       localStorage.setItem('age', age);
       localStorage.setItem('weight', weight);
+      localStorage.setItem('type', type);
+
+      if (type === "سوختگی") {
+        localStorage.setItem('dehydration_percent', burnPercent);
+      } else {
+        // محاسبه dehydration_percent بر اساس شدت دهیدراسیون
+        let dehydration_percent = 0;
+        if (age <= 2) {
+          if (level === "خفیف") {
+            dehydration_percent = 5;
+          } else if (level === "متوسط") {
+            dehydration_percent = 10;
+          } else if (level === "شدید") {
+            dehydration_percent = 15;
+          }
+        } else {
+          if (level === "خفیف") {
+            dehydration_percent = 3;
+          } else if (level === "متوسط") {
+            dehydration_percent = 6;
+          } else if (level === "شدید") {
+            dehydration_percent = 9;
+          }
+        }
+        localStorage.setItem('dehydration_percent', dehydration_percent);
+      }
+
+      // هدایت به صفحه مورد نظر
       window.location.href = page;
     }
 

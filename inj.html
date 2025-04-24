@@ -183,6 +183,8 @@
       <div class="section-header maintenance-header">Maintenance</div>
       <div id="maintenanceContent">در حال بارگذاری...</div>
     </div>
+    <p>نوع دهیدراسیون: <span id="typeDisplay"></span></p>
+    <p>درصد دهیدراسیون: <span id="dehydrationDisplay"></span></p>
   </div>
 
 
@@ -363,6 +365,20 @@
       // نمایش مقادیر در کنسول یا استفاده در صفحه
       console.log(`سن: ${age}, وزن: ${weight}, درصد دهیدراسیون: ${dehydration_percent}`);
     });
+
+    const type = localStorage.getItem('type');
+    const dehydration_percent_value = parseFloat(localStorage.getItem('dehydration_percent')) || 0;
+
+    if (!type || !dehydration_percent_value) {
+      alert("اطلاعات نوع دهیدراسیون یا درصد دهیدراسیون وارد نشده است.");
+      window.location.href = "index.html";
+    }
+
+    // استفاده از اطلاعات
+    console.log(`نوع دهیدراسیون: ${type}, درصد دهیدراسیون: ${dehydration_percent_value}`);
+
+    document.getElementById('typeDisplay').textContent = type;
+    document.getElementById('dehydrationDisplay').textContent = dehydration_percent;
   </script>
 
 </body>
