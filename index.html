@@ -120,7 +120,7 @@
     }
   </style>
 </head>
-<body>
+<body onload="updateORSStatus()">
 
   <div class="container">
     <h2>محاسبه دهیدراسیون</h2>
@@ -141,7 +141,7 @@
       <option>خونریزی</option>
     </select>
 
-    <label for="level">شدت دهیدراسیون:
+    <label id="level-label" for="level">شدت دهیدراسیون:
       <span id="help-icon" style="cursor: pointer; color: blue;" onclick="showModal()">❓</span>
     </label>
     <select id="level" onchange="updateORSStatus()">
@@ -149,6 +149,8 @@
       <option>متوسط</option>
       <option>شدید</option>
     </select>
+
+    <input type="number" id="burn-percent" placeholder="درصد دهیدراسیون (0-100)" style="display: none; margin-top: 5px;" min="0" max="100" step="0.1">
 
     <div class="button-group">
       <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
@@ -163,6 +165,24 @@
   <script>
     function updateORSStatus() {
       const type = document.getElementById('type').value;
+      const levelLabel = document.getElementById('level-label');
+      const levelSelect = document.getElementById('level');
+      const burnPercentInput = document.getElementById('burn-percent');
+      const helpIcon = document.getElementById('help-icon');
+
+      // اگر نوع دهیدراسیون "سوختگی" باشد
+      if (type === "سوختگی") {
+        levelLabel.textContent = "درصد دهیدراسیون:";
+        levelLabel.appendChild(helpIcon); // اضافه کردن علامت راهنما
+        levelSelect.style.display = "none";
+        burnPercentInput.style.display = "block";
+      } else {
+        levelLabel.textContent = "شدت دهیدراسیون:";
+        levelLabel.appendChild(helpIcon); // اضافه کردن علامت راهنما
+        levelSelect.style.display = "block";
+        burnPercentInput.style.display = "none";
+      }
+
       const level = document.getElementById('level').value;
       const age = parseFloat(document.getElementById('age').value);
       const orsBtn = document.getElementById('orsBtn');
@@ -224,6 +244,16 @@
     }
 
     function showModal() {
+      const type = document.getElementById('type').value;
+      const modalImage = document.getElementById('modal-image');
+
+      // تغییر عکس مودال بر اساس نوع دهیدراسیون
+      if (type === "سوختگی") {
+        modalImage.src = "burn_percent.jpg";
+      } else {
+        modalImage.src = "dehydration.png";
+      }
+
       const modal = document.getElementById('modal');
       modal.style.display = 'flex';
     }
