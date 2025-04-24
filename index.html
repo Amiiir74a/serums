@@ -150,7 +150,7 @@
 
     <div class="button-group">
       <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
-      <button onclick="goToPage('INJ.html')">سرم تزریقی</button>
+      <button onclick="handleInjectionClick()">سرم تزریقی</button>
     </div>
   </div>
 
@@ -210,6 +210,11 @@
       localStorage.setItem('age', age);
       localStorage.setItem('weight', weight);
       window.location.href = page;
+    }
+
+    function handleInjectionClick() {
+      updateORSStatus(); // محاسبه dehydration_percent
+      goToPage('INJ.html'); // هدایت به صفحه سرم تزریقی
     }
   </script>
 
