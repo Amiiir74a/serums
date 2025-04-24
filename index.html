@@ -141,7 +141,9 @@
       <option>خونریزی</option>
     </select>
 
-    <label for="level">شدت دهیدراسیون:</label>
+    <label for="level">شدت دهیدراسیون:
+      <span id="help-icon" style="cursor: pointer; color: blue;" onclick="showModal()">❓</span>
+    </label>
     <select id="level" onchange="updateORSStatus()">
       <option>خفیف</option>
       <option>متوسط</option>
@@ -152,6 +154,10 @@
       <button id="orsBtn" onclick="goToPage('ORS.html')">سرم خوراکی (ORS)</button>
       <button onclick="handleInjectionClick()">سرم تزریقی</button>
     </div>
+  </div>
+
+  <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center;">
+    <img id="modal-image" src="dehydration.png" alt="Dehydration Guide" style="max-width: 100%; max-height: 100%; touch-action: pinch-zoom;">
   </div>
 
   <script>
@@ -216,6 +222,15 @@
       updateORSStatus(); // محاسبه dehydration_percent
       goToPage('INJ.html'); // هدایت به صفحه سرم تزریقی
     }
+
+    function showModal() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'flex';
+    }
+
+    document.getElementById('modal').addEventListener('click', function () {
+      this.style.display = 'none';
+    });
   </script>
 
 </body>
