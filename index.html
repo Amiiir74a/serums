@@ -158,7 +158,7 @@
     function updateORSStatus() {
       const type = document.getElementById('type').value;
       const level = document.getElementById('level').value;
-      const age = parseFloat(document.getElementById('age').value);
+      const age = parseFloat(document.getElementById('age').value) || 0;
       const orsBtn = document.getElementById('orsBtn');
 
       // ORS فقط برای دهیدراسیون خفیف و متوسط + سه مورد اول مجاز است
@@ -198,11 +198,11 @@
     }
 
     function goToPage(page) {
-      const age = document.getElementById('age').value;
-      const weight = document.getElementById('weight').value;
-      const dehydration_percent = localStorage.getItem('dehydration_percent');
+      const age = parseFloat(document.getElementById('age').value) || 0;
+      const weight = parseFloat(document.getElementById('weight').value) || 0;
+      const dehydration_percent = parseFloat(localStorage.getItem('dehydration_percent')) || 0;
 
-      if (!age || !weight || !dehydration_percent) {
+      if (!age || !weight || dehydration_percent === 0) {
         alert("لطفاً سن، وزن و درصد دهیدراسیون را وارد کنید.");
         return;
       }
@@ -211,6 +211,23 @@
       localStorage.setItem('weight', weight);
       window.location.href = page;
     }
+
+    // فراخوانی updateORSStatus هنگام بارگذاری صفحه
+    document.addEventListener('DOMContentLoaded', () => {
+      // بررسی مقادیر پیش‌فرض و اجرای تابع
+      updateORSStatus();
+
+      // ذخیره مقادیر پیش‌فرض در localStorage
+      const age = parseFloat(document.getElementById('age').value) || 0;
+      const weight = parseFloat(document.getElementById('weight').value) || 0;
+      const type = document.getElementById('type').value;
+      const level = document.getElementById('level').value;
+
+      localStorage.setItem('age', age);
+      localStorage.setItem('weight', weight);
+      localStorage.setItem('type', type);
+      localStorage.setItem('level', level);
+    });
   </script>
 
 </body>
