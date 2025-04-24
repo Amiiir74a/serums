@@ -5,44 +5,62 @@
   <title>هیدراسیون تزریقی</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 20px;
-      background-color: #f3f3f3;
+      font-family: "Tahoma", sans-serif;
+      background-color: #f9f9f9;
+      margin: 20px;
       direction: rtl;
-      line-height: 2;
+      text-align: right;
     }
 
     .card {
-      background-color: white;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
       padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+      border-right: 5px solid #ccc;
     }
 
     .section-header {
-      background-color: #d0e6ff;
-      padding: 10px 15px;
-      border-radius: 10px;
-      font-weight: bold;
       font-size: 18px;
-      color: #0b5394;
-      margin-bottom: 15px;
+      font-weight: bold;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      color: white;
+      background-color: #0077cc;
+    }
+
+    .summary {
+      font-weight: bold;
+      margin-top: 20px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: white;
+      background-color: #278a46;
     }
 
     label {
       display: block;
-      margin: 10px 0;
+      margin-bottom: 10px;
+      font-size: 15px;
     }
 
-    .summary {
-      background-color: #d0e6ff;
-      padding: 10px 15px;
-      border-radius: 10px;
-      font-weight: bold;
-      color: #0b5394;
-      margin-top: 20px;
-      text-align: center;
+    select {
+      font-size: 14px;
+      padding: 4px 8px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    ul {
+      padding-right: 20px;
+      line-height: 1.8;
+    }
+
+    strong {
+      color: #d32f2f;
     }
   </style>
 </head>
@@ -56,13 +74,12 @@
   </div>
 
   <!-- کارت دوم: Maintenance -->
-  <div class="card" style="background-color: #e3f7e0;">
-    <div class="section-header" style="background-color: #a5d6a7; color: #1b5e20;">Maintenance</div>
+  <div class="card maintenance-card">
+    <div class="section-header maintenance-header">Maintenance</div>
     <div id="maintenanceContent">در حال بارگذاری...</div>
   </div>
 
-  <script src="maintenance.js"></script>
-  <script src="hydration.js"></script>
+
   <script>
     // بررسی مقادیر localStorage
     const weight = parseFloat(localStorage.getItem('weight')) || 0;
@@ -125,6 +142,88 @@
         document.getElementById("totalVolume").textContent = "مجموع سرم دریافتی: " + total + " سی‌سی";
       });
     });
+
+    // تابع برای بروزرسانی مقادیر بر اساس کشوی انتخابی
+    function updateChildSection(selected) {
+      const child_vol = calculateChildVolume(weight);
+      const kcl_vol = Math.round(child_vol / 100);
+      const kcl_type = "KCL 5%";
+      let nacl_vol = 0;
+      let child_type = "D/W 5%";
+
+      if (selected === "NaCl 5%") {
+        nacl_vol = kcl_vol * 16;
+        child_type = "D/W 5%";
+      } else if (selected === "NaCl 20%") {
+        nacl_vol = kcl_vol * 5;
+        child_type = "D/W 5%";
+      } else if (selected === "Serum D/S") {
+        nacl_vol = 0;
+        child_type = "D/S";
+      }
+
+      document.getElementById("childDetails").innerHTML = `
+        <p>در این بیمار (بدون بیماری زمینه‌ای دیگر) می‌توان در ۲۴ ساعت:</p>
+        <ul>
+          <li>${child_vol} سی‌سی ${child_type}</li>
+          ${selected !== "Serum D/S" ? `<li>+ ${nacl_vol} سی‌سی ${selected}</li>` : ""}
+          <li>+ ${kcl_vol} سی‌سی ${kcl_type}</li>
+        </ul>
+        <p>در صورت ادرار یا هیپوکالمی، KCL اضافه می‌شود.</p>
+      `;
+    }
+
+    // تابع برای محاسبه حجم کودکان
+    function calculateChildVolume(weight) {
+      if (weight <= 10) {
+        return 100 * weight;
+      } else if (weight <= 20) {
+        return ((weight - 10) * 50) + 1000;
+      } else {
+        return Math.min(((weight - 20) * 20) + 1500, 2400);
+      }
+    }
+
+    // تولید HTML برای Maintenance
+    function generateMaintenanceHtml() {
+      let html = "";
+
+      if (isAdult) {
+        // محاسبات برای بزرگسالان
+        let adult_volume = 2.4;
+        if (age > 65) adult_volume = 1.7;
+        else if (age >= 55) adult_volume = 2.1;
+
+        html = `
+          <p>در بزرگسالان با توجه به وضعیت بیمار و سابقه بیماری زمینه‌ای و نوع بیماری تصمیم‌گیری می‌شود اما به‌طور معمول در این بیمار در ۲۴ ساعت ${adult_volume} لیتر سرم داده می‌شود.</p>
+          <p>در افراد با نارسایی کلیوی باید هر ۳ ساعت حجم ادرار چک شود و به اندازه آن به اضافه ۲۵۰ سی‌سی در سه ساعت بعدی حجم داده شود.</p>
+        `;
+      } else {
+        // محاسبات برای کودکان
+        html = `
+          <label>نوع سرم سدیم:
+            <select id="naclSelector" class="modern-listview">
+              <option value="NaCl 5%">NaCl 5%</option>
+              <option value="NaCl 20%">NaCl 20%</option>
+              <option value="Serum D/S">Serum D/S</option>
+            </select>
+          </label>
+          <div id="childDetails"></div>
+        `;
+      }
+
+      return html;
+    }
+
+    // مقداردهی Maintenance
+    document.getElementById("maintenanceContent").innerHTML = generateMaintenanceHtml();
+
+    // مقداردهی اولیه کشوی انتخابی
+    if (!isAdult) {
+      const naclSelector = document.getElementById("naclSelector");
+      naclSelector.addEventListener("change", (e) => updateChildSection(e.target.value));
+      updateChildSection(naclSelector.value); // مقداردهی اولیه
+    }
   </script>
 
 </body>
