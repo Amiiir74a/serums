@@ -55,6 +55,16 @@
       background-color: #278a46;
     }
 
+    .deficit-card {
+      background-color: #ffe6e6;
+      border-right: 5px solid #ff4d4d;
+    }
+
+    .deficit-header {
+      background-color: #ff4d4d;
+      color: white;
+    }
+
     label {
       display: block;
       margin-bottom: 10px;
@@ -118,8 +128,9 @@
     }
   </style>
 </head>
-<body>
 
+
+<body>
   <div class="container">
     <!-- کارت اول: هیدراسیون اولیه -->
     <div class="card">
@@ -128,26 +139,34 @@
       <div class="summary" id="totalVolume">مجموع سرم دریافتی: ۰ سی‌سی</div>
     </div>
 
-    <!-- کارت دوم: Maintenance -->
+    <!-- کارت دوم: Deficit -->
+    <div class="card deficit-card">
+      <div class="section-header deficit-header">Deficit</div>
+      <div id="deficitContent">در حال بارگذاری...</div>
+    </div>
+
+    <!-- کارت سوم: Maintenance -->
     <div class="card maintenance-card">
       <div class="section-header maintenance-header">Maintenance</div>
       <div id="maintenanceContent">در حال بارگذاری...</div>
     </div>
   </div>
 
+
+
   <script>
     // بررسی مقادیر localStorage
     const weight = parseFloat(localStorage.getItem('weight')) || 0;
     const age = parseInt(localStorage.getItem('age')) || 0;
-    const type = localStorage.getItem('type') || "نامشخص";
+    const dehydration_percent = parseFloat(localStorage.getItem('dehydration_percent')) || 0;
 
-    if (!weight || !age) {
-      alert("اطلاعات وزن و سن وارد نشده است.");
+    if (!weight || !age || !dehydration_percent) {
+      alert("اطلاعات وزن، سن یا درصد دهیدراسیون وارد نشده است.");
       window.location.href = "index.html";
     }
 
     const isAdult = age > 16 || weight > 60;
-    const isDehydration = ["اسهال", "استفراغ", "اسهال و استفراغ"].includes(type);
+    const isDehydration = ["اسهال", "استفراغ", "اسهال و استفراغ"].includes(localStorage.getItem('type'));
     const first_type = isDehydration ? "نرمال سالین" : "رینگر لاکتات یا رینگر";
     const fourth_type = isDehydration ? "FFP" : "FFP + PC";
     const third_type = "PC";
@@ -160,6 +179,25 @@
     } else {
       first_volume = 20 * weight;
     }
+
+    // محاسبات Deficit
+    function generateDeficitHtml() {
+      const total_first = parseFloat(document.getElementById("totalVolume").textContent.replace(/[^\d]/g, "")) || 0;
+      const total_deficit = dehydration_percent * 10 * weight;
+      const new_deficit_vol = total_deficit - total_first;
+      const deficit_type = age < 1 ? "H/S" : "N/S";
+
+      return `
+        <p>با توجه به دهیدراسیون فعلی بیمار ${total_deficit} سی‌سی سرم ${deficit_type} نیاز دارد.</p>
+        <p>که چون در هیدراسیون اولیه مقدار ${total_first} سی‌سی دریافت نموده است، لازم است برای برطرف نمودن کمبود ${new_deficit_vol} سی‌سی سرم ${deficit_type} داده شود.</p>
+      `;
+    }
+
+    // مقداردهی Deficit
+    document.getElementById("deficitContent").innerHTML = generateDeficitHtml();
+
+
+
 
     // تولید HTML برای هیدراسیون
     function generateHydrationHtml() {
@@ -279,6 +317,22 @@
       naclSelector.addEventListener("change", (e) => updateChildSection(e.target.value));
       updateChildSection(naclSelector.value); // مقداردهی اولیه
     }
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const age = localStorage.getItem('age');
+      const weight = localStorage.getItem('weight');
+      const dehydration_percent = localStorage.getItem('dehydration_percent');
+
+      if (!age || !weight || !dehydration_percent) {
+        alert("اطلاعات وزن، سن یا درصد دهیدراسیون وارد نشده است.");
+        return;
+      }
+
+      // نمایش مقادیر در کنسول یا استفاده در صفحه
+      console.log(`سن: ${age}, وزن: ${weight}, درصد دهیدراسیون: ${dehydration_percent}`);
+    });
   </script>
 
 </body>
