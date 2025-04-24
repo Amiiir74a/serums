@@ -43,7 +43,6 @@
       border-radius: 12px;
       margin-bottom: 16px;
       color: white;
-      background-color: #0077cc;
     }
 
     .summary {
@@ -52,7 +51,7 @@
       padding: 10px 14px;
       border-radius: 12px;
       color: white;
-      background-color: #278a46;
+      background-color: #0075c893;
     }
 
     .deficit-card {
@@ -126,6 +125,40 @@
         padding: 5px;
       }
     }
+
+    .maintenance-header {
+      background-color: #278a46; /* رنگ سبز */
+      color: white;
+    }
+
+    /* کارت اول: هیدراسیون اولیه */
+    .hydration-card {
+      background-color: #e6f2ff; /* رنگ کم‌رنگ‌تر از عنوان */
+    }
+
+    .hydration-header {
+      background-color: #0077cc; /* رنگ آبی */
+    }
+
+    /* کارت دوم: Deficit */
+    .deficit-card {
+      background-color: #ffe6e6; /* رنگ کم‌رنگ‌تر از عنوان */
+    }
+
+    .deficit-header {
+      background-color: #ff4d4d; /* رنگ قرمز */
+      color: white;
+    }
+
+    /* کارت سوم: Maintenance */
+    .maintenance-card {
+      background-color: #e6f7e6; /* رنگ کم‌رنگ‌تر از عنوان */
+    }
+
+    .maintenance-header {
+      background-color: #278a46; /* رنگ سبز */
+      color: white;
+    }
   </style>
 </head>
 
@@ -133,8 +166,8 @@
 <body>
   <div class="container">
     <!-- کارت اول: هیدراسیون اولیه -->
-    <div class="card">
-      <div class="section-header">هیدراسیون اولیه</div>
+    <div class="card hydration-card">
+      <div class="section-header hydration-header">هیدراسیون اولیه</div>
       <div id="hydrationContent">در حال بارگذاری...</div>
       <div class="summary" id="totalVolume">مجموع سرم دریافتی: ۰ سی‌سی</div>
     </div>
@@ -182,14 +215,11 @@
 
     // محاسبات Deficit
     function generateDeficitHtml() {
-      const total_first = parseFloat(document.getElementById("totalVolume").textContent.replace(/[^\d]/g, "")) || 0;
       const total_deficit = dehydration_percent * 10 * weight;
-      const new_deficit_vol = total_deficit - total_first;
       const deficit_type = age < 1 ? "H/S" : "N/S";
 
       return `
         <p>با توجه به دهیدراسیون فعلی بیمار ${total_deficit} سی‌سی سرم ${deficit_type} نیاز دارد.</p>
-        <p>که چون در هیدراسیون اولیه مقدار ${total_first} سی‌سی دریافت نموده است، لازم است برای برطرف نمودن کمبود ${new_deficit_vol} سی‌سی سرم ${deficit_type} داده شود.</p>
       `;
     }
 
